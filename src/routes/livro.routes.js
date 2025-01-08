@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  addBook,
   addBooks,
   deleteBooks,
   editBooks,
@@ -10,7 +11,8 @@ import {
 export const livrosRouter = Router();
 
 livrosRouter.get("/livros", listBooks);
+livrosRouter.post("/livros", addBook);
+livrosRouter.post("/livros/lotes", addBooks);
 livrosRouter.get("/livros/:id", listBooksById);
-livrosRouter.post("/livros", addBooks);
 livrosRouter.put("/livros/:id", editBooks);
 livrosRouter.delete("/livros/:id", deleteBooks);

@@ -6,7 +6,7 @@ export const Livros = connection.define("livro", {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
   },
   title: {
     type: DataTypes.STRING,
@@ -19,12 +19,11 @@ export const Livros = connection.define("livro", {
   pages: {
     type: DataTypes.STRING,
     allowNull: true,
-    defaultValue: "S/N"
+    defaultValue: "S/N",
   },
   available: {
     type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: "Não"
   },
   theme: {
     type: DataTypes.STRING,
