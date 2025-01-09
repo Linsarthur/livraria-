@@ -1,4 +1,4 @@
-import { Livros } from "../models/livros.models.js";
+import { Livros } from "../models/livrosSchema.models.js";
 
 
 export const listBooks = async (req, res) => {
@@ -7,8 +7,6 @@ export const listBooks = async (req, res) => {
   });
   res.json(listaLivros);
 };
-
-
 export const listBooksById = async (req, res) => {
   try {
     const livro = await Livros.findOne({
@@ -20,7 +18,7 @@ export const listBooksById = async (req, res) => {
       res.status(404).json({ message: "Livro não encontrado." });
     }
   } catch (error) {
-    res.status(500).json({ message: "Erro ao acho livro!" });
+    res.status(500).json({ message: "Erro ao achar livro!" });
   }
 };
 
