@@ -23,5 +23,9 @@ export const Users = connection.define('user', {
       phone:{
         type: DataTypes.STRING,
         allowNull: true
+      },
+      role:{
+        type: DataTypes.STRING,
+        defaultValue: "Standard"
       }
 })

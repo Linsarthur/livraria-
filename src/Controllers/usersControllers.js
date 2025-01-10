@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import { Users } from "../models/usersSchema.models.js";
 
 export const listUsers = async (req, res) => {
@@ -30,46 +31,71 @@ export const findUserById = async (req, res) => {
 };
 
 export const addUser = async (req, res) => {
-    const { name, password, email, phone } = req.body;
+  const { name, password, email, phone, role } = req.body;
   try {
-    await Users.create({ name, password, email, phone });
-    res.json({message: "Usuário cadastrado com sucesso!"})
+    await Users.create({ name, password, email, phone, role });
+    res.json({ message: "Usuário cadastrado com sucesso!" });
   } catch (error) {
-    res.status(500).json({message: "Erro ao cadastrar usuário", error: error.message})
+    res
+      .status(500)
+      .json({ message: "Erro ao cadastrar usuário", error: error.message });
   }
 };
 
-export const editUser =  async(req, res) => {
-    const idUser = req.params.id;
-    const { name, password, email, phone } = req.body;
-    try {
-        const user = await Users.findOne({where: {id: idUser}})
+export const editUser = async (req, res) => {
+  const idUser = req.params.id;
+  const { name, password, email, phone } = req.body;
+  try {
+    const user = await Users.findOne({ where: { id: idUser } });
 
-        if(user){
-            await user.update({ name, password, email, phone });
-            res.json({message: "Usuário atualizado com sucesso"})
-        }else{
-            res.status(404).json({message: "O Usuário não foi encontrado"})
-        }
-
-
-    } catch (error) {
-        res.status(500).json({message: "Ocorreu um erro ao atualizar o usuário", error: error.message})        
+    if (user) {
+      await user.update({ name, password, email, phone });
+      res.json({ message: "Usuário atualizado com sucesso" });
+    } else {
+      res.status(404).json({ message: "O Usuário não foi encontrado" });
     }
-}
-
+  } catch (error) {
+    res.status(500).json({
+      message: "Ocorreu um erro ao atualizar o usuário",
+      error: error.message,
+    });
+  }
+};
 
 export const deleteUser = async (req, res) => {
-    const idUser = req.params.id;
-    try {
-        const user = await Users.findOne({where: {id: idUser}})
-        if(user){
-            await user.destroy();
-            res.json({message: "Usuário deletado com sucesso."})
-        }else{
-            res.status(404).json({message: "Usuário não encontrado"})
-        }
-    } catch (error) {
-        res.status(500).json({message: "Erro ao excluir usuário.", error: error.message})
+  const idUser = req.params.id;
+  try {
+    const user = await Users.findOne({ where: { id: idUser } });
+    if (user) {
+      await user.destroy();
+      res.json({ message: "Usuário deletado com sucesso." });
+    } else {
+      res.status(404).json({ message: "Usuário não encontrado" });
     }
-}
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erro ao excluir usuário.", error: error.message });
+  }
+};
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email e senha obrigatórios." });
+  }
+
+  try {
+    const findUser = await Users.findOne({ where: { email: req.body.email } });
+    if (!findUser) {
+      return res
+        .status(404)
+        .json({ message: "Usuário não encontrado" });
+    }
+
+    res.json({usuario: findUser.name, email: findUser.email, loged: true});
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao fazer login.", error: error.message });
+  }
+};
